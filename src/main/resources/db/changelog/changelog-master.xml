@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+              http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="1" author="rdanilov">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="vehicle_type"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="vehicle_type">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="rdanilov">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="vehicle_brand"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="vehicle_brand">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="rdanilov">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="vehicle"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="vehicle">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="vehicle_type_id" type="bigint">
+                <constraints foreignKeyName="vehicle_vehicle_type"
+                             referencedTableName="vehicle_type"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="vehicle_brand_id" type="bigint">
+                <constraints foreignKeyName="vehicle_vehicle_brand"
+                             referencedTableName="vehicle_brand"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="model" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="year_of_issue" type="int"/>
+            <column name="gas_type" type="varchar(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="rdanilov">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="vehicle_type"/>
+            <tableExists tableName="vehicle_brand"/>
+            <tableExists tableName="vehicle"/>
+        </preConditions>
+        <sqlFile path="insert_data.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+
+</databaseChangeLog>
